@@ -91,6 +91,13 @@
     }
 
     function armarTabla1(table, datos) {
+           //INICIALIZO EL ARRAY GUARDADO EN EL INPUT
+           if (document.getElementById("listaTabla1").value != "")
+             arrayValores = JSON.parse(document.getElementById("listaTabla1").value);
+            else
+             arrayValores = new Array();
+
+
         tablaRegistros = new Array();
         i = 1;
         datos.forEach(element => {
@@ -98,13 +105,23 @@
             registro[0] = '' + element['id'] + ' [...] ';
             registro[1] = '' + element['descripcion'];
             registro[2] = '' + element['monto'];
-            if (!isNaN(parseInt(element['cv_cargado']))) {
+
+        // PRIMERO FERIFICO SI ESTA CARGADA EN EL INPUTHIDDEN 
+        if (typeof arrayValores.find(objeto => objeto.id == element['id']) !== 'undefined'){
+            var objetoEncontrado = arrayValores.find(objeto => objeto.id == element['id']);
                 registro[4] = '<input type="checkbox" class="chktabla1" onchange="chkTabla1Change(this)" name="panelTabla1_' + element['id'] + '" checked > ';
-                registro[5] = '<input type="text" onchange="ordenArrayChange(this,\'listaTabla1\')" class="form-control input-sm"  style="width:48" name="tablaOrden_' + element['id'] + '"  value="' + element['id'] + '" > ';
+                registro[5] = '<input type="text" onchange="ordenArrayChange(this,\'listaTabla1\')" class="form-control input-sm"  style="width:48" name="tablaOrden_' + element['id'] + '"  value="' + objetoEncontrado.orden+ '" > ';
+        }else{ // SI NO ESTA EN E INPUT HIDDEN VERIFICO EL CHECK LO QUE VENIA DE LA BASE DE DATOS
+            if (!isNaN(parseInt(element['cv_cargado']))) {
+                //registro[4] = '<input type="checkbox" class="chktabla1" onchange="chkTabla1Change(this)" name="panelTabla1_' + element['id'] + '" checked > ';
+                //registro[5] = '<input type="text" onchange="ordenArrayChange(this,\'listaTabla1\')" class="form-control input-sm"  style="width:48" name="tablaOrden_' + element['id'] + '"  value="' + element['id'] + '" > ';
+                registro[4] = '<input type="checkbox" class="chktabla1" onchange="chkTabla1Change(this)" name="panelTabla1_' + element['id'] + '"  > ';
+                registro[5] = '<input type="text" onchange="ordenArrayChange(this,\'listaTabla1\')" class="form-control input-sm "  style="width:48" name="tabla1Orden_' + element['id'] + '"   > ';
             } else {
                 registro[4] = '<input type="checkbox" class="chktabla1" onchange="chkTabla1Change(this)" name="panelTabla1_' + element['id'] + '"  > ';
                 registro[5] = '<input type="text" onchange="ordenArrayChange(this,\'listaTabla1\')" class="form-control input-sm "  style="width:48" name="tabla1Orden_' + element['id'] + '"   > ';
             }
+        }
             tablaRegistros[i] = registro;
             i++;
         });
